@@ -1,7 +1,13 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import App from './App.jsx'
 
-export default defineConfig({
-  plugins: [react()],
-  base: '/glitch-in-the-script/',
-})
+const rootElement = document.getElementById('root');
+
+if (rootElement) {
+  ReactDOM.createRoot(rootElement).render(
+    <React.StrictMode>
+      <App />
+    </React.StrictMode>,
+  )
+}

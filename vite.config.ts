@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
-export default {
-  base: '/glitch-in-the-script/',  // must match your GitHub repo name exactly
-}
+export default defineConfig({
+  plugins: [react()],
+  base: '/glitch-in-the-script/', // 👈 MUST match your exact repo name with slashes
+})

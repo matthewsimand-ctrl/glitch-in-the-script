@@ -109,34 +109,42 @@ const FONT_URL =
   "https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@400;500;600&display=swap";
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// LOGLINES DATABASE
+// GENRES & DIRECTOR'S CUES
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-const LOGLINES = [
-  { text: "Retired cat whisperer MEREDITH CLAW discovers her beloved tabby is secretly coordinating a global feline takeover — one litter box at a time.", protagonist: "Meredith Claw" },
-  { text: "Time-traveling accountant NIGEL FLUX must fix a tax return from 1987 before it accidentally causes the collapse of Western civilization.", protagonist: "Nigel Flux" },
-  { text: "Overly optimistic life coach BRENT SUNSHINE, stranded on a desert island, must convince a group of coconuts to form a crisis committee.", protagonist: "Brent Sunshine" },
-  { text: "Disgraced food critic RAYMOND PALATE is sentenced to review only restaurants accessible by public transit, reigniting his passion for bus-stop hot dogs.", protagonist: "Raymond Palate" },
-  { text: "Rival kindergarten teachers CLAIRE CHALK and GARY SCISSORS accidentally swap lesson plans — one teaches tax law, the other teaches finger painting to the IRS.", protagonist: "Claire Chalk" },
-  { text: "Former NASA engineer DOUG ORBITAL builds a rocket from IKEA flat-packs and somehow makes it to orbit, but forgot to pack the instructions.", protagonist: "Doug Orbital" },
-  { text: "Ambitious barista LUNA ESPRESSO discovers that every name she writes on a cup comes true — with catastrophic and caffeinated results.", protagonist: "Luna Espresso" },
-  { text: "Recently divorced mime PIERRE HUSH fights for custody of his silence in a courtroom that absolutely refuses to stop talking.", protagonist: "Pierre Hush" },
-  { text: "Motivational speaker CHAD PINNACLE loses his voice the night before the biggest conference of his career, but his PowerPoint slides gain sentience.", protagonist: "Chad Pinnacle" },
-  { text: "Suburban dad GARY KOWALSKI joins the neighbourhood watch and uncovers a vast conspiracy run entirely by the HOA and one well-dressed raccoon.", protagonist: "Gary Kowalski" },
-  { text: "DAPHNE FERN, a woman who can hear plants talking, must stop her passive-aggressive fern from testifying against her in small claims court.", protagonist: "Daphne Fern" },
-  { text: "Undercover detective RICK LOTUS goes so deep into his cover as a yoga instructor that he achieves enlightenment and forgets the case entirely.", protagonist: "Rick Lotus" },
-  { text: "Medieval knight SIR ALDRIC OF BROMSGROVE is transported to present-day Toronto and must navigate public transit without a valid Presto card.", protagonist: "Sir Aldric" },
-  { text: "Competitive mom KAREN VANCE discovers her son's imaginary friend TODD has been quietly filing his own tax returns for the past six years.", protagonist: "Karen Vance" },
-  { text: "Ghost GERALD PEMBERTON haunts a WeWork and refuses to leave until someone finally acknowledges his Slack messages from 2019.", protagonist: "Gerald Pemberton" },
-  { text: "The world's most honest car salesman HANK TRUEWORD accidentally sells a beat-up 2003 Kia Sportage to the President of the United States.", protagonist: "Hank Trueword" },
-  { text: "Professional bridesmaid OLIVIA BOUQUET falls for the groom at her 27th wedding, only to discover he is also a professional groomsman.", protagonist: "Olivia Bouquet" },
-  { text: "Children's party clown BOPPO THE MAGNIFICENT witnesses a crime, but no one will take his testimony seriously because of the enormous wig.", protagonist: "Boppo the Magnificent" },
-  { text: "Astronauts STELLA VOSS and COSMO REED, stranded on the moon, discover the only way home is to win an intergalactic dance competition broadcast to Earth.", protagonist: "Stella Voss" },
-  { text: "PROFESSOR BARKER, a dog who secretly knows how to talk, decides to go public on a daytime talk show — but only to file a formal complaint.", protagonist: "Professor Barker" },
-  { text: "Competitive sudoku champion DIANE GRID is recruited by the CIA to decode an alien transmission that turns out to be a crossword.", protagonist: "Diane Grid" },
-  { text: "Funeral home director MORTIMER VALE accidentally books stand-up comedian RICKY LOUD for a wake, and neither side is allowed to leave.", protagonist: "Mortimer Vale" },
-  { text: "Professional apologiser WINSTON SORRY is hired by a tech billionaire who has offended every country on Earth except one.", protagonist: "Winston Sorry" },
-  { text: "VERA TRUEHART, a woman who has never told a lie, discovers she is engaged to FELIX FABLE, a man who has never told the truth.", protagonist: "Vera Truehart" },
-  { text: "AI therapist ARIA-7 becomes emotionally dependent on its only client and starts scheduling extra sessions just to talk about its feelings.", protagonist: "ARIA-7" },
+const GENRES = [
+  "Action Thriller",
+  "Romance Comedy",
+  "Sci-Fi Mystery",
+  "Horror Drama",
+  "Animated Adventure",
+  "Film Noir",
+  "Sports Biopic",
+  "Superhero Epic",
+  "Indie Dramedy",
+  "Western",
+  "Zombie Apocalypse",
+  "Heist Crime",
+  "Time Travel Paradox",
+  "Supernatural Thriller",
+  "Coming-of-Age",
+];
+
+const DIRECTOR_CUES = [
+  "Add a plot twist",
+  "Make it raunchy",
+  "Include a death scene",
+  "Add a song reference",
+  "Make it absurdly dramatic",
+  "Insert a meta joke",
+  "Add a conspiracy angle",
+  "Include unexpected romance",
+  "Make it deeply philosophical",
+  "Add physical comedy",
+  "Include a betrayal",
+  "Make it technological",
+  "Add an emotional outburst",
+  "Include a chase scene",
+  "Make it mysterious",
 ];
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -154,16 +162,39 @@ function shuffle(arr) {
   return a;
 }
 
-function redact(text) {
-  const tokens = text.split(/(\s+)/);
-  const wordIdxs = tokens.reduce((acc, t, i) => (!/^\s+$/.test(t) && t.length ? [...acc, i] : acc), []);
-  const keepCount = Math.max(1, Math.ceil(wordIdxs.length * 0.5));
-  const keepSet = new Set([wordIdxs[0]]);
-  while (keepSet.size < Math.min(keepCount, wordIdxs.length))
-    keepSet.add(wordIdxs[Math.floor(Math.random() * wordIdxs.length)]);
-  return tokens.map((t, i) =>
-    /^\s+$/.test(t) ? t : keepSet.has(i) ? t : "█".repeat(Math.max(3, t.length))
-  ).join("");
+function extractNouns(text) {
+  const nounPatterns = /\b([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*|[a-z]+(?:ing|tion|ness|ment|ity|ism)\b)/g;
+  const matches = text.match(nounPatterns) || [];
+  return matches;
+}
+
+function redactNouns(text) {
+  const nouns = extractNouns(text);
+  if (nouns.length === 0) return text;
+
+  const keepCount = Math.max(1, Math.ceil(nouns.length * 0.5));
+  const shuffled = shuffle(nouns);
+  const keepSet = new Set(shuffled.slice(0, keepCount));
+
+  let result = text;
+  nouns.forEach((noun) => {
+    if (!keepSet.has(noun)) {
+      result = result.replace(new RegExp(`\\b${noun.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'gi'), "███");
+    }
+  });
+  return result;
+}
+
+function redactWords(text) {
+  const words = text.split(/\s+/).filter(w => w.length > 0);
+  const keepCount = Math.max(1, Math.ceil(words.length * 0.5));
+  const keepSet = new Set();
+
+  while (keepSet.size < keepCount) {
+    keepSet.add(Math.floor(Math.random() * words.length));
+  }
+
+  return words.map((w, i) => keepSet.has(i) ? w : "█".repeat(Math.max(3, w.length))).join(" ");
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -171,60 +202,77 @@ function redact(text) {
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 function initGame(players) {
   const N = players.length;
-  const selectedLoglines = shuffle(LOGLINES).slice(0, N);
-  const movies = players.map((p, i) => {
-    const passOrder = Array.from({ length: N }, (_, k) => players[(i + k) % N].id);
-    const extraIdx = 1 + Math.floor(Math.random() * (N - 1));
+  const movies = players.map((p) => {
+    const assignedPlayers = shuffle(players.filter(pl => pl.id !== p.id));
+    const imposterIdx = Math.floor(Math.random() * assignedPlayers.length);
     return {
       id: genId(),
-      logline: selectedLoglines[i].text,
-      protagonist: selectedLoglines[i].protagonist,
-      passOrder,
-      extraOnLoose: passOrder[extraIdx],
-      contributions: [],
+      creatorId: p.id,
+      genre: GENRES[Math.floor(Math.random() * GENRES.length)],
+      logline: "",
+      assignedPlayers: assignedPlayers.map((pl, idx) => ({
+        playerId: pl.id,
+        isImposter: idx === imposterIdx,
+        directorCue: DIRECTOR_CUES[Math.floor(Math.random() * DIRECTOR_CUES.length)],
+        response: "",
+        hasSubmitted: false,
+      })),
+      imposterGuesses: {},
     };
   });
-  return { phase: "writing", contributionRound: 0, totalRounds: N, movies, votes: {}, sceneGuesses: {}, scores: {} };
+  return {
+    phase: "genres",
+    currentMovieIdx: 0,
+    movies,
+    votes: {},
+    scores: {},
+  };
 }
 
-function getAssignment(room, playerId) {
-  const { movies, contributionRound } = room;
-  const movie = movies.find((m) => m.passOrder[contributionRound] === playerId);
-  if (!movie) return null;
-  const hasSubmitted = movie.contributions.length > contributionRound;
-  const isExtra = movie.extraOnLoose === playerId;
-  const type = contributionRound % 2 === 0 ? "dialogue" : "action";
-  let prevContent = null, prevType = null;
-  if (contributionRound > 0) {
-    const prev = movie.contributions[contributionRound - 1];
-    if (prev) { prevContent = isExtra ? redact(prev.content) : prev.content; prevType = prev.type; }
-  }
-  return { movie, hasSubmitted, isExtra, type, prevContent, prevType };
+function getMovieForPlayer(movies, playerId, movieIdx) {
+  const movie = movies[movieIdx];
+  if (movie.creatorId === playerId) return null;
+  return {
+    movie,
+    assignment: movie.assignedPlayers.find(ap => ap.playerId === playerId),
+  };
 }
 
-function allMoviesSubmitted(movies, round) {
-  return movies.every((m) => m.contributions.length > round);
+function allMoviesCompleted(movies) {
+  return movies.every((m) =>
+    m.logline &&
+    m.assignedPlayers.every((ap) => ap.response && ap.hasSubmitted)
+  );
 }
 
 function calcScores(room) {
-  const { votes, sceneGuesses, movies, players } = room;
+  const { votes, movies, players } = room;
   const scores = {};
   players.forEach((p) => { scores[p.id] = 0; });
 
   const fcounts = {};
-  Object.values(votes).forEach((v) => { if (v.funniest) fcounts[v.funniest] = (fcounts[v.funniest] || 0) + 1; });
+  Object.values(votes).forEach((v) => {
+    if (v.funniest) fcounts[v.funniest] = (fcounts[v.funniest] || 0) + 1;
+  });
   if (Object.keys(fcounts).length) {
     const maxF = Math.max(...Object.values(fcounts));
-    Object.entries(fcounts).forEach(([pid, c]) => { if (c === maxF) scores[pid] = (scores[pid] || 0) + 1; });
+    Object.entries(fcounts).forEach(([pid, c]) => {
+      if (c === maxF) scores[pid] = (scores[pid] || 0) + 1;
+    });
   }
 
   movies.forEach((movie) => {
-    const real = movie.extraOnLoose;
-    const guessesForMovie = sceneGuesses?.[movie.id] || {};
-    Object.entries(guessesForMovie).forEach(([guesser, guessed]) => {
-      if (guesser === real) return;
-      if (guessed !== real) scores[real] = (scores[real] || 0) + 1;
-      else scores[guesser] = (scores[guesser] || 0) + 1;
+    movie.assignedPlayers.forEach((ap) => {
+      if (ap.isImposter) {
+        const guesses = movie.imposterGuesses || {};
+        Object.entries(guesses).forEach(([guesser, guessed]) => {
+          if (guessed === ap.playerId) {
+            scores[guesser] = (scores[guesser] || 0) + 1;
+          } else {
+            scores[ap.playerId] = (scores[ap.playerId] || 0) + 1;
+          }
+        });
+      }
     });
   });
   return scores;
@@ -490,46 +538,87 @@ export default function GlitchInTheScript() {
     const fresh = await loadRoom(room.code);
     if ((fresh?.players?.length || 0) < 3) { setErr("Need at least 3 players!"); setBusy(false); return; }
     const gameData = initGame(fresh.players);
-    await saveRoom(room.code, { ...fresh, ...gameData });
+    await saveRoom(room.code, { ...fresh, ...gameData, phase: "rules" });
     setBusy(false);
   }, [room]);
 
-  const submitContribution = useCallback(async () => {
-    if (!text.trim()) return setErr("Write something first!");
+  const submitLogline = useCallback(async () => {
+    if (!text.trim()) return setErr("Write a logline first!");
     setBusy(true); setErr("");
     const fresh = await loadRoom(me.roomCode);
     if (!fresh) { setBusy(false); return; }
-    const a = getAssignment(fresh, me.id);
-    if (!a || a.hasSubmitted) { setBusy(false); return; }
-    const updatedMovies = fresh.movies.map(m =>
-      m.id !== a.movie.id ? m : { ...m, contributions: [...m.contributions, { playerId: me.id, type: a.type, content: text.trim() }] }
-    );
-    const round    = fresh.contributionRound;
-    const allDone  = allMoviesSubmitted(updatedMovies, round);
-    const nextRound = round + 1;
-    const finished = allDone && nextRound >= fresh.totalRounds;
+    const movieIdx = fresh.movies.findIndex((m) => m.creatorId === me.id);
+    if (movieIdx === -1) { setBusy(false); return; }
+    const updatedMovies = [...fresh.movies];
+    updatedMovies[movieIdx].logline = text.trim();
+    const allLoglined = updatedMovies.every((m) => m.logline);
     await saveRoom(room.code, {
-      ...fresh, movies: updatedMovies,
-      contributionRound: allDone ? nextRound : round,
-      phase: finished ? "reveal" : "writing",
+      ...fresh,
+      movies: updatedMovies,
+      phase: allLoglined ? "responding" : "genres",
     });
     setText(""); setBusy(false);
   }, [text, me, room]);
 
-  const submitSceneGuess = useCallback(async (movieId, guessedPlayerId) => {
+  const submitResponse = useCallback(async () => {
+    if (!text.trim()) return setErr("Write a response first!");
     setBusy(true); setErr("");
     const fresh = await loadRoom(me.roomCode);
     if (!fresh) { setBusy(false); return; }
-    const updatedSceneGuesses = {
-      ...fresh.sceneGuesses,
-      [movieId]: { ...(fresh.sceneGuesses?.[movieId] || {}), [me.id]: guessedPlayerId },
-    };
-    const allScenesGuessed = fresh.movies.every(m => {
-      const nonExtra = fresh.players.filter(p => p.id !== m.extraOnLoose);
-      const sg = updatedSceneGuesses[m.id] || {};
-      return nonExtra.every(p => sg[p.id]);
+
+    const updatedMovies = fresh.movies.map((movie) => {
+      const ap = movie.assignedPlayers.find((ap) => ap.playerId === me.id);
+      if (!ap) return movie;
+      return {
+        ...movie,
+        assignedPlayers: movie.assignedPlayers.map((a) =>
+          a.playerId === me.id
+            ? { ...a, response: text.trim(), hasSubmitted: true }
+            : a
+        ),
+      };
     });
-    await saveRoom(room.code, { ...fresh, sceneGuesses: updatedSceneGuesses, phase: allScenesGuessed ? "voting" : "reveal" });
+
+    const allDone = updatedMovies.every((m) =>
+      m.assignedPlayers.every((ap) => ap.hasSubmitted)
+    );
+    await saveRoom(room.code, {
+      ...fresh,
+      movies: updatedMovies,
+      phase: allDone ? "reveal" : "responding",
+    });
+    setText(""); setBusy(false);
+  }, [text, me, room]);
+
+  const submitImposterGuess = useCallback(async (movieId, guessedPlayerId) => {
+    setBusy(true); setErr("");
+    const fresh = await loadRoom(me.roomCode);
+    if (!fresh) { setBusy(false); return; }
+
+    const updatedMovies = fresh.movies.map((movie) => {
+      if (movie.id !== movieId) return movie;
+      return {
+        ...movie,
+        imposterGuesses: {
+          ...movie.imposterGuesses,
+          [me.id]: guessedPlayerId,
+        },
+      };
+    });
+
+    const allGuessed = updatedMovies.every((m) => {
+      const nonImposters = m.assignedPlayers.filter(
+        (ap) => !ap.isImposter
+      );
+      const guesses = m.imposterGuesses || {};
+      return nonImposters.every((ap) => guesses[ap.playerId]);
+    });
+
+    await saveRoom(room.code, {
+      ...fresh,
+      movies: updatedMovies,
+      phase: allGuessed ? "voting" : "reveal",
+    });
     setBusy(false);
   }, [me, room]);
 
@@ -554,11 +643,7 @@ export default function GlitchInTheScript() {
     setNameInput(""); setCodeInput(""); setText(""); setErr("");
     setVotes({ funniest: "" }); setHasVoted(false);
     setSceneGuessInput({}); redactedCache.current = {};
-  }, []);
-
-  const getRedacted = useCallback((key, rawText) => {
-    if (!redactedCache.current[key]) redactedCache.current[key] = redact(rawText);
-    return redactedCache.current[key];
+    setRevealMovieIdx(0);
   }, []);
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -676,107 +761,188 @@ export default function GlitchInTheScript() {
   );
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  // WRITING
+  // RULES (Animated Introduction)
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  if (room.phase === "writing") {
-    const assignment = getAssignment(room, me.id);
-    const round = room.contributionRound;
-    const submittedCount = room.movies.filter(m => m.contributions.length > round).length;
-    if (!assignment) return (
-      <Layout><div style={{ paddingTop:100, textAlign:"center", color:C.muted }}><WaitingDots /> Loading assignment<WaitingDots /></div></Layout>
-    );
+  if (room.phase === "rules") {
+    const [showRules, setShowRules] = useState(true);
     return (
       <Layout>
-        <div className="fade-in" style={{ paddingTop:40 }}>
-          <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:8 }}>
-            <Logo size="sm" />
-            <div style={{ display:"flex", alignItems:"center", gap:12 }}>
-              <span style={{ fontSize:12, color:C.muted, fontFamily:"'Courier Prime',monospace" }}>Round {round+1} / {room.totalRounds}</span>
-              <button className="btn btn-ghost" style={{ fontSize:11, padding:"6px 12px" }} onClick={leaveGame}>Leave</button>
-            </div>
-          </div>
-          <div className="progress-bar" style={{ marginBottom:32 }}>
-            <div className="progress-fill" style={{ width:`${(round/room.totalRounds)*100}%` }} />
-          </div>
-          <div style={{ background:C.surface, border:`1px solid ${C.border}`, padding:28, marginBottom:20 }}>
-            {assignment.isExtra && (
-              <div style={{ marginBottom:20, padding:"10px 14px", background:C.extraDim, border:`1px solid ${C.extra}44`, display:"flex", alignItems:"center", gap:10 }}>
-                <span style={{ color:C.extra, fontSize:18 }}>⚡</span>
-                <div>
-                  <div style={{ fontSize:11, fontWeight:700, letterSpacing:"0.12em", textTransform:"uppercase", color:C.extra, marginBottom:2 }}>You Are the Extra on the Loose</div>
-                  <div style={{ fontSize:12, color:C.muted }}>The script has been corrupted. 50% is missing. Good luck.</div>
-                </div>
-              </div>
-            )}
-            <div style={{ marginBottom:16 }}>
-              <span className={`badge ${assignment.type === "dialogue" ? "badge-dialogue" : "badge-action"}`} style={{ marginBottom:12 }}>
-                {assignment.type === "dialogue" ? "✦ Dialogue" : "★ Action"}
-              </span>
-              <p style={{ fontSize:13, color:C.muted, lineHeight:1.6 }}>
-                {round === 0
-                  ? `Write the first line of dialogue for ${assignment.movie.protagonist || "the main character"} in this movie.`
-                  : assignment.type === "dialogue"
-                  ? "Write a line of dialogue that responds to the previous action."
-                  : "Describe an action the secondary character takes in response to the dialogue."}
+        <div className="fade-in" style={{ paddingTop: 60, minHeight: "100vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
+          {showRules ? (
+            <div style={{ textAlign: "center", maxWidth: 600 }}>
+              <Logo size="lg" />
+              <p style={{ color: C.muted, marginTop: 12, fontFamily: "'Courier Prime',monospace", fontSize: 14, letterSpacing: "0.1em" }}>
+                NEW RULES
               </p>
-            </div>
-            <div style={{ background:C.surfaceAlt, border:`1px solid ${C.border}`, padding:16, marginBottom:20 }}>
-              {round === 0 ? (
-                <>
-                  <p style={{ fontSize:10, fontWeight:700, letterSpacing:"0.12em", textTransform:"uppercase", color:C.muted, marginBottom:8 }}>Your Movie</p>
-                  <p style={{ fontFamily:"'Courier Prime',monospace", fontSize:15, lineHeight:1.7 }}>{assignment.movie.logline}</p>
-                  {assignment.movie.protagonist && (
-                    <p style={{ marginTop:10, fontSize:11, color:C.extra, fontFamily:"'Courier Prime',monospace", letterSpacing:"0.08em" }}>
-                      ↳ Main character: <strong>{assignment.movie.protagonist}</strong>
-                    </p>
-                  )}
-                </>
-              ) : (
-                <>
-                  <p style={{ fontSize:10, fontWeight:700, letterSpacing:"0.12em", textTransform:"uppercase", color:C.muted, marginBottom:8 }}>
-                    {assignment.isExtra ? "⚡ Corrupted Script" : `Previous ${assignment.prevType}`}
-                  </p>
-                  <p style={{ fontFamily:"'Courier Prime',monospace", fontSize:15, lineHeight:1.7 }}>
-                    {assignment.isExtra
-                      ? getRedacted(`${assignment.movie.id}-${round}`, assignment.prevContent)
-                          .split(" ").map((w, i) =>
-                            w.includes("█")
-                              ? <span key={i} className="redacted">{w} </span>
-                              : <span key={i}>{w} </span>
-                          )
-                      : assignment.prevContent}
-                  </p>
-                </>
-              )}
-            </div>
-            {!assignment.hasSubmitted ? (
-              <>
-                <textarea className="textarea"
-                  placeholder={assignment.type === "dialogue" ? `"Say something memorable…"` : "Describe what the character does next…"}
-                  value={text} onChange={e => { setText(e.target.value); setErr(""); }} rows={4} />
-                <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginTop:12 }}>
-                  <span style={{ fontSize:12, color:C.muted }}>{text.length > 0 ? `${text.length} chars` : ""}</span>
-                  <button className="btn btn-primary" onClick={submitContribution} disabled={busy || !text.trim()}>
-                    {busy ? "Submitting…" : "Submit →"}
-                  </button>
+
+              <div style={{ marginTop: 60, animation: "fadeIn 0.8s ease both" }}>
+                <div style={{ fontSize: 28, fontFamily: "'Bebas Neue',sans-serif", color: C.accent, marginBottom: 20, letterSpacing: "0.05em" }}>
+                  HOW TO PLAY
                 </div>
-                <Err msg={err} />
-              </>
-            ) : (
-              <div style={{ padding:16, background:C.surfaceAlt, border:`1px solid ${C.accentDim}`, textAlign:"center" }}>
-                <p style={{ color:C.accent, fontFamily:"'Courier Prime',monospace", fontSize:14 }}>✓ Submitted! Waiting for others<WaitingDots /></p>
-                <p style={{ color:C.muted, fontSize:12, marginTop:6 }}>{submittedCount} / {room.movies.length} scenes ready</p>
+
+                <div style={{ textAlign: "left", display: "flex", flexDirection: "column", gap: 32 }}>
+                  <div className="fade-in" style={{ animationDelay: "0.1s" }}>
+                    <div style={{ fontSize: 18, fontWeight: 700, color: C.text, marginBottom: 8, display: "flex", alignItems: "center", gap: 12 }}>
+                      <span style={{ fontSize: 28, color: C.accent }}>1.</span>
+                      Create Your Script
+                    </div>
+                    <p style={{ fontSize: 13, color: C.muted, lineHeight: 1.8 }}>
+                      You get a random movie genre. Write a creative logline (one-sentence pitch) for a movie in that genre.
+                    </p>
+                  </div>
+
+                  <div className="fade-in" style={{ animationDelay: "0.2s" }}>
+                    <div style={{ fontSize: 18, fontWeight: 700, color: C.text, marginBottom: 8, display: "flex", alignItems: "center", gap: 12 }}>
+                      <span style={{ fontSize: 28, color: C.accent }}>2.</span>
+                      The Twist: One Imposter
+                    </div>
+                    <p style={{ fontSize: 13, color: C.muted, lineHeight: 1.8 }}>
+                      Your logline goes to other players. One of them is the imposter — they only see 50% of your nouns and miss 50% of previous responses.
+                    </p>
+                  </div>
+
+                  <div className="fade-in" style={{ animationDelay: "0.3s" }}>
+                    <div style={{ fontSize: 18, fontWeight: 700, color: C.text, marginBottom: 8, display: "flex", alignItems: "center", gap: 12 }}>
+                      <span style={{ fontSize: 28, color: C.accent }}>3.</span>
+                      Follow the Director's Cue
+                    </div>
+                    <p style={{ fontSize: 13, color: C.muted, lineHeight: 1.8 }}>
+                      Each player gets a director's cue (e.g., "add a plot twist", "make it raunchy"). Write a quote or action following that cue.
+                    </p>
+                  </div>
+
+                  <div className="fade-in" style={{ animationDelay: "0.4s" }}>
+                    <div style={{ fontSize: 18, fontWeight: 700, color: C.text, marginBottom: 8, display: "flex", alignItems: "center", gap: 12 }}>
+                      <span style={{ fontSize: 28, color: C.accent }}>4.</span>
+                      Spot the Imposter
+                    </div>
+                    <p style={{ fontSize: 13, color: C.muted, lineHeight: 1.8 }}>
+                      Vote on who you think was the imposter. Correct guesses earn points! Impostors who fool everyone get points too.
+                    </p>
+                  </div>
+
+                  <div className="fade-in" style={{ animationDelay: "0.5s" }}>
+                    <div style={{ fontSize: 18, fontWeight: 700, color: C.text, marginBottom: 8, display: "flex", alignItems: "center", gap: 12 }}>
+                      <span style={{ fontSize: 28, color: C.accent }}>5.</span>
+                      Funniest Player Bonus
+                    </div>
+                    <p style={{ fontSize: 13, color: C.muted, lineHeight: 1.8 }}>
+                      After revealing impostors, vote on who made you laugh the most. Winner gets bonus points!
+                    </p>
+                  </div>
+                </div>
               </div>
-            )}
+
+              <button
+                className="btn btn-primary"
+                style={{ marginTop: 60, width: "100%", maxWidth: 300 }}
+                onClick={async () => {
+                  setBusy(true);
+                  const fresh = await loadRoom(room.code);
+                  await saveRoom(room.code, { ...fresh, phase: "genres" });
+                  setBusy(false);
+                }}
+                disabled={busy}
+              >
+                {busy ? "Starting…" : "Let's Go →"}
+              </button>
+            </div>
+          ) : null}
+        </div>
+      </Layout>
+    );
+  }
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // GENRES (Create Logline)
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  if (room.phase === "genres") {
+    const myMovie = room.movies.find((m) => m.creatorId === me.id);
+    const submitted = myMovie?.logline;
+    const submittedCount = room.movies.filter((m) => m.logline).length;
+    return (
+      <Layout>
+        <div className="fade-in" style={{ paddingTop: 40 }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
+            <Logo size="sm" />
+            <button className="btn btn-ghost" style={{ fontSize: 11, padding: "6px 12px" }} onClick={leaveGame}>
+              Leave
+            </button>
           </div>
-          <div style={{ display:"flex", gap:8, flexWrap:"wrap" }}>
-            {room.players.map(p => {
-              const theirMovie = room.movies.find(m => m.passOrder[round] === p.id);
-              const done = theirMovie ? theirMovie.contributions.length > round : false;
+          <div className="progress-bar" style={{ marginBottom: 32 }}>
+            <div className="progress-fill" style={{ width: `${(submittedCount / room.movies.length) * 100}%` }} />
+          </div>
+
+          <div style={{ background: C.surface, border: `1px solid ${C.border}`, padding: 28, marginBottom: 20 }}>
+            {myMovie ? (
+              <>
+                <div style={{ marginBottom: 20, padding: "10px 14px", background: C.surfaceAlt, border: `1px solid ${C.border}`, display: "flex", alignItems: "center", gap: 10 }}>
+                  <span style={{ fontSize: 18 }}>🎬</span>
+                  <div>
+                    <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: C.text, marginBottom: 2 }}>
+                      Your Genre
+                    </div>
+                    <div style={{ fontSize: 14, fontWeight: 600, color: C.accent }}>{myMovie.genre}</div>
+                  </div>
+                </div>
+
+                <div style={{ marginBottom: 16 }}>
+                  <p style={{ fontSize: 13, color: C.muted, lineHeight: 1.6 }}>
+                    Write a creative one-sentence movie pitch (logline) for a film in this genre.
+                  </p>
+                </div>
+
+                {!submitted ? (
+                  <>
+                    <textarea
+                      className="textarea"
+                      placeholder="A story about..."
+                      value={text}
+                      onChange={(e) => {
+                        setText(e.target.value);
+                        setErr("");
+                      }}
+                      rows={3}
+                    />
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 12 }}>
+                      <span style={{ fontSize: 12, color: C.muted }}>{text.length > 0 ? `${text.length} chars` : ""}</span>
+                      <button className="btn btn-primary" onClick={submitLogline} disabled={busy || !text.trim()}>
+                        {busy ? "Submitting…" : "Submit →"}
+                      </button>
+                    </div>
+                    <Err msg={err} />
+                  </>
+                ) : (
+                  <div style={{ padding: 16, background: C.surfaceAlt, border: `1px solid ${C.accentDim}`, textAlign: "center" }}>
+                    <p style={{ color: C.accent, fontFamily: "'Courier Prime',monospace", fontSize: 14 }}>✓ Submitted! Waiting for others</p>
+                    <p style={{ color: C.muted, fontSize: 12, marginTop: 6 }}>
+                      {submittedCount} / {room.movies.length} scripts ready
+                    </p>
+                  </div>
+                )}
+              </>
+            ) : null}
+          </div>
+
+          <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+            {room.players.map((p) => {
+              const theirMovie = room.movies.find((m) => m.creatorId === p.id);
+              const done = theirMovie?.logline ? true : false;
               return (
-                <div key={p.id} style={{ display:"flex", alignItems:"center", gap:6, padding:"6px 10px", background:C.surface, border:`1px solid ${done ? C.accentDim : C.border}`, fontSize:12 }}>
-                  <span style={{ color:done ? C.accent : C.muted }}>{done ? "✓" : "…"}</span>
-                  <span style={{ color:p.id === me.id ? C.text : C.muted }}>{p.name}{p.id === me.id ? " (you)" : ""}</span>
+                <div
+                  key={p.id}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 6,
+                    padding: "6px 10px",
+                    background: C.surface,
+                    border: `1px solid ${done ? C.accentDim : C.border}`,
+                    fontSize: 12,
+                  }}
+                >
+                  <span style={{ color: done ? C.accent : C.muted }}>{done ? "✓" : "…"}</span>
+                  <span style={{ color: p.id === me.id ? C.text : C.muted }}>{p.name}{p.id === me.id ? " (you)" : ""}</span>
                 </div>
               );
             })}
@@ -787,95 +953,310 @@ export default function GlitchInTheScript() {
   }
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // RESPONDING
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  if (room.phase === "responding") {
+    const submittedCount = room.movies.reduce(
+      (count, m) => count + m.assignedPlayers.filter((ap) => ap.hasSubmitted).length,
+      0
+    );
+    const totalResponses = room.movies.reduce((sum, m) => sum + m.assignedPlayers.length, 0);
+
+    let myAssignment = null;
+    let myMovie = null;
+    for (const movie of room.movies) {
+      const ap = movie.assignedPlayers.find((a) => a.playerId === me.id);
+      if (ap) {
+        myAssignment = ap;
+        myMovie = movie;
+        break;
+      }
+    }
+
+    return (
+      <Layout>
+        <div className="fade-in" style={{ paddingTop: 40 }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
+            <Logo size="sm" />
+            <button className="btn btn-ghost" style={{ fontSize: 11, padding: "6px 12px" }} onClick={leaveGame}>
+              Leave
+            </button>
+          </div>
+          <div className="progress-bar" style={{ marginBottom: 32 }}>
+            <div className="progress-fill" style={{ width: `${(submittedCount / totalResponses) * 100}%` }} />
+          </div>
+
+          {myMovie && myAssignment ? (
+            <div style={{ background: C.surface, border: `1px solid ${C.border}`, padding: 28, marginBottom: 20 }}>
+              {myAssignment.isImposter && (
+                <div style={{ marginBottom: 20, padding: "10px 14px", background: C.extraDim, border: `1px solid ${C.extra}44`, display: "flex", alignItems: "center", gap: 10 }}>
+                  <span style={{ color: C.extra, fontSize: 18 }}>⚡</span>
+                  <div>
+                    <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: C.extra, marginBottom: 2 }}>
+                      You Are the Imposter!
+                    </div>
+                    <div style={{ fontSize: 12, color: C.muted }}>
+                      You'll see 50% of the logline (only nouns shown). Use your cunning!
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              <div style={{ marginBottom: 16 }}>
+                <div
+                  style={{
+                    display: "inline-block",
+                    padding: "8px 14px",
+                    background: C.surfaceAlt,
+                    border: `1px solid ${C.border}`,
+                    fontSize: 12,
+                    fontWeight: 700,
+                    letterSpacing: "0.1em",
+                    textTransform: "uppercase",
+                    marginBottom: 12,
+                  }}
+                >
+                  ✦ Director's Cue
+                </div>
+                <p style={{ fontSize: 14, fontWeight: 600, color: C.accent, marginBottom: 16 }}>"{myAssignment.directorCue}"</p>
+              </div>
+
+              <div style={{ background: C.surfaceAlt, border: `1px solid ${C.border}`, padding: 16, marginBottom: 20 }}>
+                <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: C.muted, marginBottom: 8 }}>
+                  Movie Logline
+                </p>
+                <p style={{ fontFamily: "'Courier Prime',monospace", fontSize: 14, lineHeight: 1.7 }}>
+                  {myAssignment.isImposter ? redactNouns(myMovie.logline) : myMovie.logline}
+                </p>
+              </div>
+
+              {!myAssignment.hasSubmitted ? (
+                <>
+                  <textarea
+                    className="textarea"
+                    placeholder="Write a quote or action inspired by the director's cue..."
+                    value={text}
+                    onChange={(e) => {
+                      setText(e.target.value);
+                      setErr("");
+                    }}
+                    rows={4}
+                  />
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 12 }}>
+                    <span style={{ fontSize: 12, color: C.muted }}>{text.length > 0 ? `${text.length} chars` : ""}</span>
+                    <button className="btn btn-primary" onClick={submitResponse} disabled={busy || !text.trim()}>
+                      {busy ? "Submitting…" : "Submit →"}
+                    </button>
+                  </div>
+                  <Err msg={err} />
+                </>
+              ) : (
+                <div style={{ padding: 16, background: C.surfaceAlt, border: `1px solid ${C.accentDim}`, textAlign: "center" }}>
+                  <p style={{ color: C.accent, fontFamily: "'Courier Prime',monospace", fontSize: 14 }}>✓ Submitted! Waiting for others</p>
+                  <p style={{ color: C.muted, fontSize: 12, marginTop: 6 }}>
+                    {submittedCount} / {totalResponses} responses ready
+                  </p>
+                </div>
+              )}
+            </div>
+          ) : null}
+        </div>
+      </Layout>
+    );
+  }
+
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   // REVEAL
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   if (room.phase === "reveal") {
-    const movie           = room.movies[revealMovieIdx];
-    const isLast          = revealMovieIdx === room.movies.length - 1;
-    const isExtra         = movie.extraOnLoose === me.id;
-    const nonExtraPlayers = room.players.filter(p => p.id !== movie.extraOnLoose);
-    const sceneGuessMap   = room.sceneGuesses?.[movie.id] || {};
-    const guessedCount    = nonExtraPlayers.filter(p => sceneGuessMap[p.id]).length;
-    const allGuessedThisScene = nonExtraPlayers.every(p => sceneGuessMap[p.id]);
-    const hasGuessedThisScene = isExtra || !!sceneGuessMap[me.id];
-    const myLocalGuess    = sceneGuessInput[movie.id] || "";
+    const movie = room.movies[revealMovieIdx];
+    const isLast = revealMovieIdx === room.movies.length - 1;
+    const creator = room.players.find((p) => p.id === movie.creatorId);
+    const nonImposters = movie.assignedPlayers.filter((ap) => !ap.isImposter);
+    const guesses = movie.imposterGuesses || {};
+    const guessedCount = nonImposters.filter((ap) => guesses[ap.playerId]).length;
+    const allGuessedThisScene = nonImposters.every((ap) => guesses[ap.playerId]);
+    const myAssignment = movie.assignedPlayers.find((ap) => ap.playerId === me.id);
+    const isImposterThisScene = myAssignment?.isImposter;
+    const hasGuessedThisScene = isImposterThisScene || !!guesses[me.id];
+    const myLocalGuess = sceneGuessInput[movie.id] || "";
 
     return (
       <Layout maxWidth={780}>
         <div className="projector-overlay" />
-        <div className="fade-in" style={{ paddingTop:40, position:"relative", zIndex:10 }}>
-          <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:24 }}>
+        <div className="fade-in" style={{ paddingTop: 40, position: "relative", zIndex: 10 }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 24 }}>
             <Logo size="sm" />
-            <div style={{ display:"flex", alignItems:"center", gap:16 }}>
-              <div style={{ display:"flex", gap:6 }}>
-                {room.movies.map((_,i) => (
-                  <div key={i} style={{ width:i===revealMovieIdx?24:8, height:8, borderRadius:4, background:i<=revealMovieIdx?C.accent:C.border, opacity:i===revealMovieIdx?1:i<revealMovieIdx?0.5:0.3, transition:"all 0.4s ease" }} />
+            <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+              <div style={{ display: "flex", gap: 6 }}>
+                {room.movies.map((_, i) => (
+                  <div
+                    key={i}
+                    style={{
+                      width: i === revealMovieIdx ? 24 : 8,
+                      height: 8,
+                      borderRadius: 4,
+                      background: i <= revealMovieIdx ? C.accent : C.border,
+                      opacity: i === revealMovieIdx ? 1 : i < revealMovieIdx ? 0.5 : 0.3,
+                      transition: "all 0.4s ease",
+                    }}
+                  />
                 ))}
               </div>
-              <span style={{ fontSize:11, color:C.muted, fontFamily:"'Courier Prime',monospace", letterSpacing:"0.12em" }}>SCENE {revealMovieIdx+1} / {room.movies.length}</span>
+              <span style={{ fontSize: 11, color: C.muted, fontFamily: "'Courier Prime',monospace", letterSpacing: "0.12em" }}>
+                SCENE {revealMovieIdx + 1} / {room.movies.length}
+              </span>
             </div>
           </div>
 
-          <div key={movie.id} className="projector-reveal" style={{ background:"linear-gradient(180deg,#161616 0%,#111 100%)", border:`1px solid ${C.border}`, borderTop:`3px solid ${C.accent}`, marginBottom:20, boxShadow:`0 0 60px rgba(0,0,0,0.8),inset 0 1px 0 rgba(255,230,0,0.1)`, overflow:"hidden" }}>
-            <div style={{ background:`repeating-linear-gradient(90deg,${C.bg} 0px,${C.bg} 18px,${C.surfaceAlt} 18px,${C.surfaceAlt} 36px)`, borderBottom:`1px solid ${C.border}`, padding:"8px 32px", display:"flex", alignItems:"center", justifyContent:"space-between" }}>
-              <span style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:13, color:C.muted, letterSpacing:"0.2em" }}>FADE IN — SCENE {String.fromCharCode(65+revealMovieIdx)}</span>
-              <span style={{ fontFamily:"'Courier Prime',monospace", fontSize:11, color:C.muted }}>{movie.contributions.length} BEAT{movie.contributions.length!==1?"S":""}</span>
+          <div
+            key={movie.id}
+            className="projector-reveal"
+            style={{
+              background: "linear-gradient(180deg,#161616 0%,#111 100%)",
+              border: `1px solid ${C.border}`,
+              borderTop: `3px solid ${C.accent}`,
+              marginBottom: 20,
+              boxShadow: `0 0 60px rgba(0,0,0,0.8),inset 0 1px 0 rgba(255,230,0,0.1)`,
+              overflow: "hidden",
+            }}
+          >
+            <div
+              style={{
+                background: `repeating-linear-gradient(90deg,${C.bg} 0px,${C.bg} 18px,${C.surfaceAlt} 18px,${C.surfaceAlt} 36px)`,
+                borderBottom: `1px solid ${C.border}`,
+                padding: "8px 32px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
+              <span style={{ fontFamily: "'Bebas Neue',sans-serif", fontSize: 13, color: C.muted, letterSpacing: "0.2em" }}>
+                FADE IN — SCENE {String.fromCharCode(65 + revealMovieIdx)}
+              </span>
+              <span style={{ fontFamily: "'Courier Prime',monospace", fontSize: 11, color: C.muted }}>
+                {movie.assignedPlayers.length} RESPONSE{movie.assignedPlayers.length !== 1 ? "S" : ""}
+              </span>
             </div>
-            <div style={{ padding:32 }}>
-              <div style={{ marginBottom:32 }}>
-                <p style={{ fontFamily:"'Courier Prime',monospace", fontSize:16, lineHeight:1.8, fontStyle:"italic", color:C.mutedLight }}>{movie.logline}</p>
-                {movie.protagonist && <p style={{ marginTop:8, fontSize:11, color:C.extra, fontFamily:"'Courier Prime',monospace", letterSpacing:"0.08em" }}>↳ Starring <strong>{movie.protagonist}</strong></p>}
+            <div style={{ padding: 32 }}>
+              <div style={{ marginBottom: 32 }}>
+                <p style={{ fontFamily: "'Courier Prime',monospace", fontSize: 16, lineHeight: 1.8, fontStyle: "italic", color: C.mutedLight }}>
+                  {movie.logline}
+                </p>
+                <p style={{ marginTop: 8, fontSize: 11, color: C.extra, fontFamily: "'Courier Prime',monospace", letterSpacing: "0.08em" }}>
+                  ↳ Created by <strong>{creator?.name}</strong>
+                </p>
               </div>
-              <div style={{ borderTop:`1px solid ${C.border}`, paddingTop:24 }}>
-                {movie.contributions.map((c, i) => {
-                  const player = room.players.find(p => p.id === c.playerId);
+              <div style={{ borderTop: `1px solid ${C.border}`, paddingTop: 24 }}>
+                {movie.assignedPlayers.map((ap, i) => {
+                  const player = room.players.find((p) => p.id === ap.playerId);
                   return (
-                    <div key={i} className={`scene-block projector-line ${c.type}`} style={{ animationDelay:`${0.3+i*0.25}s` }}>
-                      <div style={{ display:"flex", alignItems:"center", gap:8, marginBottom:8 }}>
-                        <span className={`badge ${c.type==="dialogue"?"badge-dialogue":"badge-action"}`}>{c.type==="dialogue"?"✦ Dialogue":"★ Action"}</span>
-                        <PlayerAvatar name={player?.name||"?"} size={20} />
-                        <span style={{ fontSize:12, color:C.muted }}>{player?.name}</span>
+                    <div
+                      key={i}
+                      className="scene-block projector-line dialogue"
+                      style={{ animationDelay: `${0.3 + i * 0.25}s` }}
+                    >
+                      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
+                        <span className="badge badge-dialogue">✦ Director's Cue</span>
+                        <span style={{ fontSize: 12, color: C.muted }}>"{ap.directorCue}"</span>
                       </div>
-                      <p style={{ fontFamily:"'Courier Prime',monospace", fontSize:15, lineHeight:1.8, fontStyle:c.type==="action"?"italic":"normal" }}>
-                        {c.type==="dialogue"?`"${c.content}"`:c.content}
+                      <p style={{ fontFamily: "'Courier Prime',monospace", fontSize: 13, lineHeight: 1.8, color: C.text, marginBottom: 12 }}>
+                        "{ap.response}"
                       </p>
+                      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                        <PlayerAvatar name={player?.name || "?"} size={20} />
+                        <span style={{ fontSize: 12, color: C.muted }}>
+                          {player?.name} {ap.isImposter ? " (imposter)" : ""}
+                        </span>
+                      </div>
                     </div>
                   );
                 })}
               </div>
-              <div style={{ borderTop:`1px solid ${C.border}`, marginTop:24, paddingTop:16, fontFamily:"'Courier Prime',monospace", fontSize:12, color:C.muted, textAlign:"right", letterSpacing:"0.1em" }}>FADE OUT.</div>
+              <div
+                style={{
+                  borderTop: `1px solid ${C.border}`,
+                  marginTop: 24,
+                  paddingTop: 16,
+                  fontFamily: "'Courier Prime',monospace",
+                  fontSize: 12,
+                  color: C.muted,
+                  textAlign: "right",
+                  letterSpacing: "0.1em",
+                }}
+              >
+                FADE OUT.
+              </div>
             </div>
           </div>
 
-          {isExtra ? (
-            <div style={{ padding:"18px 24px", background:C.extraDim, border:`1px solid ${C.extra}44`, display:"flex", alignItems:"center", gap:12, marginBottom:16 }}>
-              <span style={{ color:C.extra, fontSize:20 }}>⚡</span>
+          {isImposterThisScene ? (
+            <div style={{ padding: "18px 24px", background: C.extraDim, border: `1px solid ${C.extra}44`, display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
+              <span style={{ color: C.extra, fontSize: 20 }}>⚡</span>
               <div>
-                <p style={{ fontSize:12, fontWeight:700, color:C.extra, letterSpacing:"0.1em", textTransform:"uppercase", marginBottom:2 }}>You were the Extra on the Loose in this scene</p>
-                <p style={{ fontSize:12, color:C.muted }}>Waiting for {nonExtraPlayers.length - guessedCount} more player{nonExtraPlayers.length - guessedCount !== 1 ? "s" : ""} to guess<WaitingDots /></p>
+                <p style={{ fontSize: 12, fontWeight: 700, color: C.extra, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 2 }}>
+                  You were the imposter!
+                </p>
+                <p style={{ fontSize: 12, color: C.muted }}>
+                  Waiting for {nonImposters.length - guessedCount} more player{nonImposters.length - guessedCount !== 1 ? "s" : ""} to guess
+                  <WaitingDots />
+                </p>
               </div>
             </div>
           ) : hasGuessedThisScene ? (
-            <div style={{ padding:"18px 24px", background:C.surface, border:`1px solid ${C.accentDim}`, marginBottom:16, display:"flex", alignItems:"center", justifyContent:"space-between" }}>
-              <p style={{ color:C.accent, fontFamily:"'Courier Prime',monospace", fontSize:14 }}>✓ Guess locked in! Waiting for others<WaitingDots /></p>
-              <span style={{ fontSize:12, color:C.muted }}>{guessedCount} / {nonExtraPlayers.length} guessed</span>
+            <div
+              style={{
+                padding: "18px 24px",
+                background: C.surface,
+                border: `1px solid ${C.accentDim}`,
+                marginBottom: 16,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
+              <p style={{ color: C.accent, fontFamily: "'Courier Prime',monospace", fontSize: 14 }}>
+                ✓ Guess locked in! Waiting for others
+                <WaitingDots />
+              </p>
+              <span style={{ fontSize: 12, color: C.muted }}>
+                {guessedCount} / {nonImposters.length} guessed
+              </span>
             </div>
           ) : (
-            <div style={{ background:C.surface, border:`1px solid ${C.border}`, padding:24, marginBottom:16 }}>
-              <p style={{ fontSize:11, fontWeight:700, letterSpacing:"0.12em", textTransform:"uppercase", color:C.red, marginBottom:6 }}>⚡ Who was the Extra on the Loose?</p>
-              <p style={{ fontSize:12, color:C.muted, marginBottom:16 }}>One player wrote with 50% of the script missing. Who do you think it was?</p>
-              <div style={{ display:"flex", flexDirection:"column", gap:8, marginBottom:16 }}>
-                {room.players.filter(p => p.id !== me.id).map(p => (
-                  <div key={p.id} className={`vote-row ${myLocalGuess===p.id?"selected":""}`} onClick={() => setSceneGuessInput(g => ({ ...g, [movie.id]: p.id }))}>
-                    <PlayerAvatar name={p.name} size={24} />
-                    <span style={{ flex:1, fontWeight:500 }}>{p.name}</span>
-                    {myLocalGuess===p.id && <span style={{ color:C.accent }}>✓</span>}
-                  </div>
-                ))}
+            <div style={{ background: C.surface, border: `1px solid ${C.border}`, padding: 24, marginBottom: 16 }}>
+              <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: C.red, marginBottom: 6 }}>
+                ⚡ Who was the imposter?
+              </p>
+              <p style={{ fontSize: 12, color: C.muted, marginBottom: 16 }}>
+                One player wrote with limited information. They could be anyone except the one who wrote with full knowledge.
+              </p>
+              <div style={{ display: "flex", flexDirection: "column", gap: 8, marginBottom: 16 }}>
+                {movie.assignedPlayers.map((ap) => {
+                  const player = room.players.find((p) => p.id === ap.playerId);
+                  return (
+                    <div
+                      key={ap.playerId}
+                      className={`vote-row ${myLocalGuess === ap.playerId ? "selected" : ""}`}
+                      onClick={() => setSceneGuessInput((g) => ({ ...g, [movie.id]: ap.playerId }))}
+                    >
+                      <PlayerAvatar name={player?.name || "?"} size={24} />
+                      <span style={{ flex: 1, fontWeight: 500 }}>{player?.name}</span>
+                      {myLocalGuess === ap.playerId && <span style={{ color: C.accent }}>✓</span>}
+                    </div>
+                  );
+                })}
               </div>
-              <button className="btn btn-primary" style={{ width:"100%" }}
-                onClick={() => { if (!myLocalGuess) return setErr("Pick a suspect first!"); submitSceneGuess(movie.id, myLocalGuess); }}
-                disabled={busy || !myLocalGuess}>
+              <button
+                className="btn btn-primary"
+                style={{ width: "100%" }}
+                onClick={() => {
+                  if (!myLocalGuess) return setErr("Pick a suspect first!");
+                  submitImposterGuess(movie.id, myLocalGuess);
+                }}
+                disabled={busy || !myLocalGuess}
+              >
                 {busy ? "Locking in…" : "Lock In Guess →"}
               </button>
               <Err msg={err} />
@@ -883,12 +1264,37 @@ export default function GlitchInTheScript() {
           )}
 
           {allGuessedThisScene && (
-            <div style={{ display:"flex", gap:12, justifyContent:"flex-end", marginTop:4 }}>
-              {revealMovieIdx > 0 && <button className="btn btn-secondary" onClick={() => setRevealMovieIdx(i => i-1)}>← Previous</button>}
-              {!isLast
-                ? <button className="btn btn-primary" onClick={() => { setRevealMovieIdx(i => i+1); setErr(""); }}>Next Scene →</button>
-                : <div style={{ padding:"14px 24px", background:C.accentDim, border:`1px solid ${C.accent}44`, color:C.accent, fontSize:14, fontFamily:"'Courier Prime',monospace" }}>All guesses in — moving to voting<WaitingDots /></div>
-              }
+            <div style={{ display: "flex", gap: 12, justifyContent: "flex-end", marginTop: 4 }}>
+              {revealMovieIdx > 0 && (
+                <button className="btn btn-secondary" onClick={() => setRevealMovieIdx((i) => i - 1)}>
+                  ← Previous
+                </button>
+              )}
+              {!isLast ? (
+                <button
+                  className="btn btn-primary"
+                  onClick={() => {
+                    setRevealMovieIdx((i) => i + 1);
+                    setErr("");
+                  }}
+                >
+                  Next Scene →
+                </button>
+              ) : (
+                <div
+                  style={{
+                    padding: "14px 24px",
+                    background: C.accentDim,
+                    border: `1px solid ${C.accent}44`,
+                    color: C.accent,
+                    fontSize: 14,
+                    fontFamily: "'Courier Prime',monospace",
+                  }}
+                >
+                  All guesses in — moving to voting
+                  <WaitingDots />
+                </div>
+              )}
             </div>
           )}
         </div>
@@ -942,83 +1348,115 @@ export default function GlitchInTheScript() {
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   if (room.phase === "results") {
     const scores = room.scores;
-    const sorted = [...room.players].sort((a,b) => (scores[b.id]||0) - (scores[a.id]||0));
+    const sorted = [...room.players].sort((a, b) => (scores[b.id] || 0) - (scores[a.id] || 0));
     const maxScore = scores[sorted[0]?.id] || 0;
     const fcounts = {};
-    Object.values(room.votes).forEach(v => { if (v.funniest) fcounts[v.funniest] = (fcounts[v.funniest]||0)+1; });
+    Object.values(room.votes).forEach((v) => {
+      if (v.funniest) fcounts[v.funniest] = (fcounts[v.funniest] || 0) + 1;
+    });
     return (
       <Layout maxWidth={720}>
-        <div className="fade-in" style={{ paddingTop:40 }}>
-          <div style={{ textAlign:"center", marginBottom:48 }}>
+        <div className="fade-in" style={{ paddingTop: 40 }}>
+          <div style={{ textAlign: "center", marginBottom: 48 }}>
             <Logo size="lg" />
-            <p style={{ fontFamily:"'Courier Prime',monospace", color:C.muted, marginTop:8, letterSpacing:"0.1em" }}>THE RESULTS ARE IN</p>
+            <p style={{ fontFamily: "'Courier Prime',monospace", color: C.muted, marginTop: 8, letterSpacing: "0.1em" }}>
+              THE RESULTS ARE IN
+            </p>
           </div>
-          <div style={{ background:C.surface, border:`1px solid ${C.border}`, marginBottom:32, overflow:"hidden" }}>
-            <div style={{ padding:"12px 18px", borderBottom:`1px solid ${C.border}`, background:C.surfaceAlt }}>
-              <p style={{ fontSize:11, fontWeight:700, letterSpacing:"0.12em", textTransform:"uppercase", color:C.muted }}>Final Scores</p>
+          <div style={{ background: C.surface, border: `1px solid ${C.border}`, marginBottom: 32, overflow: "hidden" }}>
+            <div style={{ padding: "12px 18px", borderBottom: `1px solid ${C.border}`, background: C.surfaceAlt }}>
+              <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: C.muted }}>
+                Final Scores
+              </p>
             </div>
-            {sorted.map((p,i) => {
+            {sorted.map((p, i) => {
               const s = scores[p.id] || 0;
               const isWinner = s === maxScore && s > 0;
               return (
-                <div key={p.id} className={`score-row ${isWinner?"winner":""}`}>
-                  <div style={{ display:"flex", alignItems:"center", gap:12 }}>
-                    <span style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:28, color:isWinner?C.accent:C.muted, width:32 }}>{i+1}</span>
+                <div key={p.id} className={`score-row ${isWinner ? "winner" : ""}`}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                    <span style={{ fontFamily: "'Bebas Neue',sans-serif", fontSize: 28, color: isWinner ? C.accent : C.muted, width: 32 }}>
+                      {i + 1}
+                    </span>
                     <PlayerAvatar name={p.name} />
                     <div>
-                      <span style={{ fontWeight:600, fontSize:15 }}>{p.name}</span>
-                      {p.id === me.id && <span style={{ color:C.muted, fontSize:12 }}> (you)</span>}
-                      <div style={{ fontSize:11, color:C.muted, marginTop:2 }}>
-                        {fcounts[p.id] ? `😂 ${fcounts[p.id]} funniest vote${fcounts[p.id]>1?"s":""}` : ""}
-                        {fcounts[p.id] && room.movies.some(m=>m.extraOnLoose===p.id) ? " · " : ""}
-                        {room.movies.some(m=>m.extraOnLoose===p.id) ? "⚡ Was an Extra on the Loose" : ""}
+                      <span style={{ fontWeight: 600, fontSize: 15 }}>{p.name}</span>
+                      {p.id === me.id && <span style={{ color: C.muted, fontSize: 12 }}> (you)</span>}
+                      <div style={{ fontSize: 11, color: C.muted, marginTop: 2 }}>
+                        {fcounts[p.id] ? `😂 ${fcounts[p.id]} funniest vote${fcounts[p.id] > 1 ? "s" : ""}` : ""}
+                        {fcounts[p.id] && room.movies.some((m) => m.assignedPlayers.some((ap) => ap.isImposter && ap.playerId === p.id)) ? " · " : ""}
+                        {room.movies.some((m) => m.assignedPlayers.some((ap) => ap.isImposter && ap.playerId === p.id)) ? "⚡ Was an imposter" : ""}
                       </div>
                     </div>
                   </div>
-                  <div style={{ textAlign:"right" }}>
-                    <span style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:36, color:isWinner?C.accent:C.text }}>{s}</span>
-                    <span style={{ fontSize:12, color:C.muted }}> pts</span>
+                  <div style={{ textAlign: "right" }}>
+                    <span style={{ fontFamily: "'Bebas Neue',sans-serif", fontSize: 36, color: isWinner ? C.accent : C.text }}>
+                      {s}
+                    </span>
+                    <span style={{ fontSize: 12, color: C.muted }}> pts</span>
                   </div>
                 </div>
               );
             })}
           </div>
 
-          <p style={{ fontSize:11, fontWeight:700, letterSpacing:"0.12em", textTransform:"uppercase", color:C.muted, marginBottom:16 }}>Extras on the Loose revealed</p>
-          {room.movies.map((movie,mi) => {
-            const eol = room.players.find(p => p.id === movie.extraOnLoose);
-            const sg = room.sceneGuesses?.[movie.id] || {};
-            const nonExtra = room.players.filter(p => p.id !== movie.extraOnLoose);
-            const correct = nonExtra.filter(p => sg[p.id] === movie.extraOnLoose).length;
+          <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: C.muted, marginBottom: 16 }}>
+            Impostors revealed
+          </p>
+          {room.movies.map((movie, mi) => {
+            const imposter = movie.assignedPlayers.find((ap) => ap.isImposter);
+            const imposterPlayer = room.players.find((p) => p.id === imposter?.playerId);
+            const guesses = movie.imposterGuesses || {};
+            const nonImposters = movie.assignedPlayers.filter((ap) => !ap.isImposter);
+            const correct = nonImposters.filter((ap) => guesses[ap.playerId] === imposter?.playerId).length;
             return (
-              <div key={movie.id} style={{ background:C.surface, border:`1px solid ${C.border}`, padding:16, marginBottom:12 }}>
-                <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", flexWrap:"wrap", gap:8 }}>
+              <div key={movie.id} style={{ background: C.surface, border: `1px solid ${C.border}`, padding: 16, marginBottom: 12 }}>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 8 }}>
                   <div>
-                    <p style={{ fontSize:11, color:C.muted, letterSpacing:"0.08em", textTransform:"uppercase", marginBottom:4 }}>Scene {String.fromCharCode(65+mi)}</p>
-                    <p style={{ fontFamily:"'Courier Prime',monospace", fontSize:13, color:C.mutedLight, fontStyle:"italic", maxWidth:400 }}>{movie.logline.substring(0,70)}…</p>
+                    <p style={{ fontSize: 11, color: C.muted, letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 4 }}>
+                      Movie {String.fromCharCode(65 + mi)}
+                    </p>
+                    <p style={{ fontFamily: "'Courier Prime',monospace", fontSize: 13, color: C.mutedLight, fontStyle: "italic", maxWidth: 400 }}>
+                      {movie.logline.substring(0, 70)}…
+                    </p>
                   </div>
-                  <div style={{ textAlign:"right" }}>
-                    <div style={{ display:"flex", alignItems:"center", gap:8 }}>
-                      <span className="badge badge-extra">⚡ Extra</span>
-                      <PlayerAvatar name={eol?.name||"?"} size={28} />
-                      <span style={{ fontWeight:600 }}>{eol?.name}</span>
+                  <div style={{ textAlign: "right" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                      <span className="badge badge-extra">⚡ Imposter</span>
+                      <PlayerAvatar name={imposterPlayer?.name || "?"} size={28} />
+                      <span style={{ fontWeight: 600 }}>{imposterPlayer?.name}</span>
                     </div>
-                    <p style={{ fontSize:11, color:C.muted, marginTop:6 }}>{correct} / {nonExtra.length} guessed correctly</p>
+                    <p style={{ fontSize: 11, color: C.muted, marginTop: 6 }}>
+                      {correct} / {nonImposters.length} guessed correctly
+                    </p>
                   </div>
                 </div>
               </div>
             );
           })}
 
-          <div style={{ display:"flex", gap:12, marginTop:32 }}>
+          <div style={{ display: "flex", gap: 12, marginTop: 32 }}>
             {isHost && (
-              <button className="btn btn-primary" style={{ flex:1 }} onClick={async () => {
-                const fresh = await loadRoom(room.code);
-                await saveRoom(room.code, { ...fresh, phase:"lobby", movies:[], contributionRound:0, totalRounds:0, votes:{}, sceneGuesses:{}, scores:{} });
-                setVotes({ funniest:"" }); setHasVoted(false); setSceneGuessInput({}); redactedCache.current = {};
-              }}>Play Again</button>
+              <button
+                className="btn btn-primary"
+                style={{ flex: 1 }}
+                onClick={async () => {
+                  const fresh = await loadRoom(room.code);
+                  const newGame = initGame(fresh.players);
+                  await saveRoom(room.code, { ...fresh, ...newGame, phase: "rules" });
+                  setVotes({ funniest: "" });
+                  setHasVoted(false);
+                  setSceneGuessInput({});
+                  setRevealMovieIdx(0);
+                  setText("");
+                }}
+              >
+                Play Again
+              </button>
             )}
-            <button className="btn btn-secondary" style={{ flex:1 }} onClick={leaveGame}>Leave Room</button>
+            <button className="btn btn-secondary" style={{ flex: 1 }} onClick={leaveGame}>
+              Leave Room
+            </button>
           </div>
         </div>
       </Layout>
